@@ -40,7 +40,7 @@ jobs:
 Name                  | Required                                      
 -------------         | -------------                                
 token                 | Yes. Defaults to `GITHUB_TOKEN`
-build_and_push_job    | Yes. Name of previous Build-and-Push-Docker-Image job
+build_and_push_job    | Yes. Defaults to `buildAndPushDocker`. Name of previous Build-and-Push-Docker-Image job
 helm_repo             | Yes. GitHub repository with your Helm charts
 helm_folder           | Yes. Folder path, within your Helm charts repo, within which you'd execute the `helm upgrade` command. Note: By default, Helm charts repository will be installed in `infra` sub-directory in the runner. So, for example, if the folder within which you'd execute the `helm upgrade` command is in `some-subfolder` which is located on the repository's root folder, you should input `some-subfolder` here
 tag_regex             | Yes. Defaults to: `(${{github.event.repository.name}}[\r\n]+\s*tag:\s*)(\d*\.\d*\.\d*)`. Previously-updated Docker image tag to be updated in the Helm repo. Regex groups are supported
