@@ -1,0 +1,93 @@
+name: 'Deploy K8s pod with Helm'
+description: 'Generic action to update tag in Helm infra repository, update K8s deployments with Helm and notify with MS Teams'
+inputs:
+  token:
+    description: 'GitHub access token'
+    required: true
+    default: ${{ github.token }}
+  helm_repo:
+    description: 'Helm charts GH repository'
+    required: true
+  helm_folder:
+    description: 'Folder within the Helm repo to execute upgrade from'
+    required: true
+  tag_regex:
+    description: 'Regex to capture the previously-updated Docker image tag in the Helm repo'
+    required: true
+    default: (${{github.event.repository.name}}[\r\n]+\s*tag:\s*)(\d*\.\d*\.\d*)
+  tag_replace_regex:
+    description: 'Regex pattern to replace the tag of the relevant docker image in the Helm repo'
+    required: true
+    default: $1${{needs.buildAndPushDocker.outputs.tagversion}}
+  tag_replace_file:
+    description: 'Path to Helm repo file in which docker image tag needs to be replaced'
+    required: true
+    default: '^infra/${{ inputs.helm_folder }}/values.yaml'
+  kube_config:
+    description: 'Secret with kubeconfig contents'
+    required: true
+  k8s_namespace:
+    description: 'K8s namespace name'
+    required: true
+  use_teams:
+    type: string
+    description: 'Whether to use MS Teams for deployment status notifications'
+    required: true
+    default: true
+  teams_webhook:
+    description: 'Secret with MS Teams webhook'
+    required: false
+
+permissions:
+  contents: write
+
+runs:
+  using: "composite"
+  steps:
+    - name: 🤝 checkout
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ inputs.helm_repo }}
+        path: ./infra
+        token: ${{ inputs.token }}
+  
+    - name: 🔄 replace tag with regex
+      uses: mingjun97/file-regex-replace@v1
+      with:
+        regex: ${{ inputs.tag_regex }}
+        replacement: "${{ inputs.tag_replace_regex }}"
+        include: ${{ inputs.tag_replace_file }}
+
+    - name: 🐙 push updated tag to GitHub
+      run: |
+        cd infra
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add . && git commit -m "GH Actions: Update ${{github.event.repository.name}} tag to ${{needs.build-and-push.outputs.tagversion}} [skip ci]"
+        git push
+      shell: bash
+
+    - name: 🤫 create kube config
+      run: |
+        mkdir -p $HOME/.kube/
+        echo "${{ inputs.kube_config }}" > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+      shell: bash
+
+    - name: ⚒️ install helm
+      uses: azure/setup-helm@v2.0
+
+    - name: 🚀 Helm upgrade
+      run: |
+        helmreleasename="$(helm list -q -n ${{ inputs.k8s_namespace }})"
+        helm upgrade $helmreleasename ./infra/${{ inputs.helm_folder }} -n ${{ inputs.k8s_namespace }}
+      shell: bash
+    
+    - name: 📲 Teams notification
+      uses: skitionek/notify-microsoft-teams@master
+      if: ${{ inputs.use_teams == 'true' }} && always()
+      with:
+        webhook_url: ${{ inputs.teams_webhook }}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        steps: ${{ toJson(steps) }}
