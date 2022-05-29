@@ -34,6 +34,19 @@ jobs:
   deployment:
     needs: buildAndPushDocker
     runs-on: ubuntu-latest
+    steps:
+      - name: deployWithHelm
+        uses: pangea-it/deployWithHelm@main
+        with:
+          token: ${{secrets.PAT}}
+          helm_repo: some-organization/helm-infra-repo
+          helm_folder: special-folder
+          tag_replace_regex: "$1${{needs.buildAndPushDocker.outputs.tagversion}}"
+          tag_replace_file: ^infra/special-folder/values.yaml
+          tag_number: ${{needs.buildAndPushDocker.outputs.tagversion}}
+          kube_config: ${{ secrets.KUBECONFIG }}
+          k8s_namespace: my-namespace
+          teams_webhook: ${{ secrets.TEAMS_WEBHOOK }}
 ```
     
 ## Parameters ##
