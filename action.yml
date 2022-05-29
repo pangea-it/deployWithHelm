@@ -5,6 +5,9 @@ inputs:
     description: 'GitHub access token'
     required: true
     default: ${{ github.token }}
+  build_and_push_job:
+    description: 'Name of previous Build and Push Docker Image job'
+    required: true
   helm_repo:
     description: 'Helm charts GH repository'
     required: true
@@ -63,7 +66,7 @@ runs:
         cd infra
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add . && git commit -m "GH Actions: Update ${{github.event.repository.name}} tag to ${{needs.build-and-push.outputs.tagversion}} [skip ci]"
+        git add . && git commit -m "GH Actions: Update ${{github.event.repository.name}} tag to ${{needs.${{ build_and_push_job }}.outputs.tagversion}} [skip ci]"
         git push
       shell: bash
 
