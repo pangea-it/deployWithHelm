@@ -5,10 +5,6 @@ inputs:
     description: 'GitHub access token'
     required: true
     default: ${{ github.token }}
-  build_and_push_job:
-    description: 'Name of previous Build and Push Docker Image job'
-    required: true
-    default: buildAndPushDocker
   helm_repo:
     description: 'Helm charts GH repository'
     required: true
