@@ -50,3 +50,9 @@ k8s_namespace         | Yes. Namespace name of your resources.
 use_teams             | Yes. Defaults to `true`. Indicates whether deployment status notification will be sent to dedicated MS Teams channel.
 teams_webhook         | No. Required if `use_teams` is set to `true`. Secret name with MS Teams webhook
 
+## Credits ##
+The following GitHub Actions are used in this action:
++ actions/checkout
++ mingjun97/file-regex-replace
++ azure/setup-helm
++ skitionek/notify-microsoft-teams
