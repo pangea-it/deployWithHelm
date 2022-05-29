@@ -43,7 +43,7 @@ token                 | Yes. Defaults to `GITHUB_TOKEN`
 helm_repo             | Yes. GitHub repository with your Helm charts
 helm_folder           | Yes. Folder path, within your Helm charts repo, within which you'd execute the `helm upgrade` command. Note: By default, Helm charts repository will be installed in `infra` sub-directory in the runner. So, for example, if the folder within which you'd execute the `helm upgrade` command is in `some-subfolder` which is located on the repository's root folder, you should input `some-subfolder` here
 tag_regex             | Yes. Defaults to: `(${{github.event.repository.name}}[\r\n]+\s*tag:\s*)(\d*\.\d*\.\d*)`. Previously-updated Docker image tag to be updated in the Helm repo. Regex groups are supported
-tag_replace_regex     | Yes. Defaults to: `"$1${{needs.buildAndPushDocker.outputs.tagversion}}"`. Regex groups can be referred with `$<group no>`
+tag_replace_regex     | Yes. Defaults to: `"$1${{needs.buildAndPushDocker.outputs.tagversion}}"`. Regex groups can be referred with `$<group no>. Regex pattern to replace the tag of the relevant docker image in the Helm repository
 tag_replace_file      | Yes. Defaults to `^infra/${{ inputs.helm_folder }}/values.yaml`. Path to the Helm file where the tag needs to be updated, in Regex format. By default, Helm charts repository will be installed in `infra` sub-directory in the runner. So for example, to update `infra/special-subfolder/values.yaml`, use: `^infra/special-subfolder/values.yaml`
 kube_config           | Yes. Secret name that contains the `kubeconfig` contents
 k8s_namespace         | Yes. Namespace name of your resources
