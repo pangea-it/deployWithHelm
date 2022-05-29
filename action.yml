@@ -22,7 +22,7 @@ inputs:
   tag_replace_regex:
     description: 'Regex pattern to replace the tag of the relevant docker image in the Helm repo'
     required: true
-    default: $1${{needs.buildAndPushDocker.outputs.tagversion}}
+    default: $1${{needs.${{inputs.build_and_push_job}}.outputs.tagversion}}
   tag_replace_file:
     description: 'Path to Helm repo file in which docker image tag needs to be replaced'
     required: true

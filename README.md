@@ -9,7 +9,7 @@ This composite action assumes the following:
 4. That you wish to update the tag of pod-to-be-upgraded pod in your Helm repository after successful docker update of the relevant docker image 
 5. That you use MS Teams, and wants to notify your team about deployment status
 6. That your deployment workflow consists of the followings:
-    1. Preliminary step: Update and push the relevant docker image and its tag using a different Job. For example, using [Pangea's buildUpdatePushGhcr GH Action](https://github.com/pangea-it/buildUpdatePushGhcr). Then in your deployment job you:
+    1. Preliminary step: Update and push the relevant docker image and its tag using a different Job, named, by default, `buildAndPushDocker`. For example, using [Pangea's buildUpdatePushGhcr GH Action](https://github.com/pangea-it/buildUpdatePushGhcr). Then in your deployment job you:
     2. Checkout your Helm repository to a dedicated location on the GH action runner
     3. Update the tag number of the deployed pod on the Helm repository with its updated version number, retrieved from the previous build job
     4. Create `kubeconfig` in `$HOME/.kube/config` of the runner
