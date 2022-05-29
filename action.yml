@@ -90,6 +90,6 @@ runs:
       if: ${{ inputs.use_teams == 'true' }} && always()
       with:
         webhook_url: ${{ inputs.teams_webhook }}
-        needs: ${{ toJson(needs) }}
+#        needs: ${{ toJson(needs) }}
         job: ${{ toJson(job) }}
         steps: ${{ toJson(steps) }}
