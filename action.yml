@@ -25,6 +25,9 @@ inputs:
   tag_replace_file:
     description: 'Path to Helm repo file in which docker image tag needs to be replaced'
     required: true
+  tag_number:
+    description: 'Updated docker image tag number from previous build-and-deploy job'
+    required: true
   kube_config:
     description: 'Secret with kubeconfig contents'
     required: true
