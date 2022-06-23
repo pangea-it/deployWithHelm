@@ -5,6 +5,9 @@ inputs:
     description: 'GitHub access token'
     required: true
     default: ${{ github.token }}
+  checkout_branch:
+    description: 'Branch to checkout'
+    required: false
   helm_repo:
     description: 'Helm charts GH repository'
     required: true
@@ -49,6 +52,7 @@ runs:
       uses: actions/checkout@v3
       with:
         repository: ${{ inputs.helm_repo }}
+        ref: ${{ inputs.checkout_branch }}
         path: ./infra
         token: ${{ inputs.token }}
   
