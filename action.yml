@@ -17,7 +17,7 @@ inputs:
   tag_regex:
     description: 'Regex to capture the previously-updated Docker image tag in the Helm repo'
     required: true
-    default: (${{github.event.repository.name}}[\r\n]+\s*tag:\s*)(\d*\.\d*\.\d*)
+    default: (\/${{github.event.repository.name}}[\r\n]+\s*tag:\s*)(\d*\.\d*\.\d*)
   tag_replace_regex:
     description: 'Regex pattern to replace the tag of the relevant docker image in the Helm repo'
     required: true
